@@ -62,8 +62,8 @@ def trainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dict,image
         color_mode = image_color_mode,
         target_size = target_size,
         batch_size = batch_size,
-        save_to_dir = save_to_dir,   #字符串，保存提升后图片时使用的前缀, 仅当设置了save_to_dir时生效
-        save_prefix  = image_save_prefix,
+        save_to_dir = save_to_dir,   
+        save_prefix  = image_save_prefix,  #字符串，保存提升后图片时使用的前缀, 仅当设置了save_to_dir时生效
         seed = seed)
     mask_generator = mask_datagen.flow_from_directory(
         train_path,
