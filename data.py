@@ -27,13 +27,13 @@ def adjustData(img,mask,flag_multi_class,num_class):
     if(flag_multi_class):
         img = img / 255
         mask = mask[:,:,:,0] if(len(mask.shape) == 4) else mask[:,:,0]
-        new_mask = np.zeros(mask.shape + (num_class,))
+        new_mask = np.zeros(mask.shape + (num_class,))  ##np.zeros里面是shape元组，此目的是将数据厚度扩展到num_class层，以在层的方向实现one-hot结构
         for i in range(num_class):
             #for one pixel in the image, find the class in mask and convert it into one-hot vector
             #index = np.where(mask == i)
             #index_mask = (index[0],index[1],index[2],np.zeros(len(index[0]),dtype = np.int64) + i) if (len(mask.shape) == 4) else (index[0],index[1],np.zeros(len(index[0]),dtype = np.int64) + i)
             #new_mask[index_mask] = 1
-            new_mask[mask == i,i] = 1
+            new_mask[mask == i,i] = 1  #将平面的mask的每类，都单独变成一层，PS：还是有点看不懂
         new_mask = np.reshape(new_mask,(new_mask.shape[0],new_mask.shape[1]*new_mask.shape[2],new_mask.shape[3])) if flag_multi_class else np.reshape(new_mask,(new_mask.shape[0]*new_mask.shape[1],new_mask.shape[2]))
         mask = new_mask
     elif(np.max(img) > 1):
@@ -75,8 +75,9 @@ def trainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dict,image
         save_to_dir = save_to_dir,
         save_prefix  = mask_save_prefix,
         seed = seed)
-    train_generator = zip(image_generator, mask_generator)
-    for (img,mask) in train_generator:
+    train_generator = zip(image_generator, mask_generator) #组合成一个生成器
+    for (img,mask) in train_generator:  
+#由于batch是2，所以一次返回两张，即img是一个2张灰度图片的数组，[2,256,256]
         img,mask = adjustData(img,mask,flag_multi_class,num_class)
         yield (img,mask)
 
@@ -106,7 +107,7 @@ def geneTrainNpy(image_path,mask_path,flag_multi_class = False,num_class = 2,ima
         mask_arr.append(mask)
     image_arr = np.array(image_arr)
     mask_arr = np.array(mask_arr)
-    return image_arr,mask_arr
+    return image_arr,mask_arr  #该函数主要是分别在训练集文件夹下和标签文件夹下搜索图片，然后扩展一个维度后以array的形式返回，是为了在没用数据增强时的读取文件夹内自带的数据
 
 
 def labelVisualize(num_class,color_dict,img):
@@ -120,5 +121,5 @@ def labelVisualize(num_class,color_dict,img):
 
 def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
     for i,item in enumerate(npyfile):
-        img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
-        io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)
+        img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]  #多类的话就图成彩色，非多类（两类）的话就是黑白色
+        io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)  #skimage模块中，如果图片数据是float的话，那么值应该是0到1或者-1到1的浮点数，

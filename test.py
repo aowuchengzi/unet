@@ -6,3 +6,25 @@ Created on Tue Oct  9 10:25:55 2018
 """
 
 import numpy as np
+#%%
+
+mask = array([[[0., 1.],
+               [0., 1.],
+               [0., 1.]],
+
+              [[0., 1.],
+               [0., 1.],
+               [0., 1.]],
+
+              [[0., 1.],
+               [0., 1.],
+               [0., 1.]]])
+new_mask = np.zeros((3, 3) + (2, ))
+new_mask
+
+#%%
+for i in range(3):
+   
+    new_mask[mask == i,i] = 1
+new_mask = np.reshape(new_mask,(new_mask.shape[0],new_mask.shape[1]*new_mask.shape[2],new_mask.shape[3])) if flag_multi_class else np.reshape(new_mask,(new_mask.shape[0]*new_mask.shape[1],new_mask.shape[2]))
+mask = new_mask
