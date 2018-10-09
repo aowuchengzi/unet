@@ -1,5 +1,4 @@
 from model import *
-from model import unet
 from data import *
 
 #os.environ["CUDA_VISIBLE_DEVICES"] = "0"
