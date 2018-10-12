@@ -121,5 +121,7 @@ def labelVisualize(num_class,color_dict,img):
 
 def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
     for i,item in enumerate(npyfile):
-        img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]  #多类的话就图成彩色，非多类（两类）的话就是黑白色
-        io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)  #skimage模块中，如果图片数据是float的话，那么值应该是0到1或者-1到1的浮点数，
+        img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]  
+        #多类的话就图成彩色，非多类（两类）的话就是黑白色
+        io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)  
+        #skimage模块中，如果图片数据是float的话，那么值应该是0到1或者-1到1的浮点数，
